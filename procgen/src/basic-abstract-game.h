@@ -103,7 +103,7 @@ class BasicAbstractGame : public Game {
     void reposition_agent();
 
   protected:
-    std::shared_ptr<Entity> agent;
+
     std::vector<std::shared_ptr<Entity>> entities;
     std::vector<std::shared_ptr<QImage>> basic_assets;
     std::vector<std::shared_ptr<QImage>> basic_reflections;

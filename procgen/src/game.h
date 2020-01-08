@@ -57,7 +57,7 @@ struct GameOptions {
 class Game {
   public:
     GameOptions options;
-
+    std::shared_ptr<Entity> agent;
     bool grid_step = false;
     int level_seed_low = 0;
     int level_seed_high = 1;
@@ -107,6 +107,8 @@ class Game {
     virtual void game_reset() = 0;
     virtual void game_step() = 0;
     virtual void game_draw(QPainter &p, const QRect &rect) = 0;
+
+
 
   private:
     int reset_count;

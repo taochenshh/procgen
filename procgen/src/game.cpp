@@ -88,6 +88,7 @@ void Game::render_to_buf(void *dst, int w, int h, bool antialias) {
 void Game::reset() {
     reset_count++;
 
+
     if (episodes_remaining == 0) {
         if (options.use_sequential_levels && step_data.level_complete) {
             // prevent overflow in seed sequences
@@ -154,6 +155,10 @@ void Game::step() {
     *(int32_t*)(obs_bufs[1]) = (int32_t)(current_level_seed);
     *(int32_t*)(info_bufs[0]) = (int32_t)(level_seed);
     *(int32_t*)(info_bufs[1]) = (int32_t)(step_data.level_complete);
+
+    auto position = (float*)(obs_bufs[2]);
+    position[0] = (float)(agent->x);
+    position[1] = (float)(agent->y);
 }
 
 void Game::game_init() {

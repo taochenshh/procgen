@@ -274,6 +274,17 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
         s.high.int32 = INT32_MAX;
         observation_spaces.push_back(s);
     }
+    {
+        struct libenv_space s;
+        strcpy(s.name, "position");
+        s.type = LIBENV_SPACE_TYPE_BOX;
+        s.dtype = LIBENV_DTYPE_FLOAT32;
+        s.shape[0] = 2;
+        s.ndim = 1,
+        s.low.float32 = -100000.0;
+        s.high.float32 = 100000.0;
+        observation_spaces.push_back(s);
+    }
 
     {
         struct libenv_space s;
@@ -338,6 +349,9 @@ void VecGame::reset(const std::vector<std::vector<void *>> &obs) {
         game->render_to_buf(game->render_buf, RES_W, RES_H, false);
         bgr32_to_rgb888(obs[e][0], game->render_buf, RES_W, RES_H);
         *(int32_t*)(obs[e][1]) = (int32_t)(game->current_level_seed);
+        auto position = (float*)(obs[e][2]);
+        position[0] = (float)(game->agent->x);
+        position[1] = (float)(game->agent->y);
     }
 }
 
