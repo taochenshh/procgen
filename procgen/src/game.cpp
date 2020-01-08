@@ -151,6 +151,7 @@ void Game::step() {
     bgr32_to_rgb888(obs_bufs[0], render_buf, RES_W, RES_H);
     *reward_ptr = step_data.reward;
     *done_ptr = (uint8_t)step_data.done;
+    *(int32_t*)(obs_bufs[1]) = (int32_t)(current_level_seed);
     *(int32_t*)(info_bufs[0]) = (int32_t)(level_seed);
     *(int32_t*)(info_bufs[1]) = (int32_t)(step_data.level_complete);
 }
