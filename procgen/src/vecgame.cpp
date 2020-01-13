@@ -314,7 +314,7 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
         struct libenv_space s;
         strcpy(s.name, "level_complete");
         s.type = LIBENV_SPACE_TYPE_DISCRETE;
-        s.dtype = LIBENV_DTYPE_UINT8;
+        s.dtype = LIBENV_DTYPE_INT32;
         s.shape[0] = 1;
         s.ndim = 1,
         s.low.int32 = 0;
