@@ -67,7 +67,7 @@ def build(package=False, debug=False):
             conda_info = json.loads(
                 sp.run(["conda", "info", "--json"], stdout=sp.PIPE).stdout
             )
-            conda_prefix = conda_info["active_prefix"]
+            conda_prefix = conda_info.get('active_prefix', None)
             if conda_prefix is None:
                 conda_prefix = conda_info["conda_prefix"]
             if platform.system() == "Windows":
