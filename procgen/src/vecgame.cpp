@@ -321,6 +321,17 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
         s.high.int32 = 1;
         info_spaces.push_back(s);
     }
+    {
+        struct libenv_space s;
+        strcpy(s.name, "time_step");
+        s.type = LIBENV_SPACE_TYPE_BOX;
+        s.dtype = LIBENV_DTYPE_INT32;
+        s.shape[0] = 1;
+        s.ndim = 1,
+        s.low.int32 = 0;
+        s.high.int32 = INT32_MAX;
+        info_spaces.push_back(s);
+    }
 
     {
         struct libenv_space s;

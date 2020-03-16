@@ -115,6 +115,8 @@ void Game::reset() {
 
 void Game::step() {
     cur_time += 1;
+    // make a copy of cur_time as cur_time might be reset to 0 in reset()
+    int time_step = cur_time;
     bool will_force_reset = false;
 
     if (action == -1) {
@@ -155,6 +157,7 @@ void Game::step() {
     *(int32_t*)(obs_bufs[1]) = (int32_t)(current_level_seed);
     *(int32_t*)(info_bufs[0]) = (int32_t)(level_seed);
     *(int32_t*)(info_bufs[1]) = (int32_t)(step_data.level_complete);
+    *(int32_t*)(info_bufs[2]) = (int32_t)(time_step);
 
     auto position = (float*)(obs_bufs[2]);
     position[0] = (float)(agent->x);
