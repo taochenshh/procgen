@@ -1,8 +1,18 @@
 #include "vecoptions.h"
 #include "cpp-utils.h"
+#include <iostream>
 
 VecOptions::VecOptions(const struct libenv_options options) {
     m_options = std::vector<libenv_option>(options.items, options.items + options.count);
+}
+
+void VecOptions::consume_int_array(std::string name, std::vector<int32_t> *value) {
+    auto opt = find_option(name, LIBENV_DTYPE_INT32);
+    if (opt.data == nullptr) {
+        return;
+    }
+    std::vector<int32_t> int_values((int32_t *)opt.data, (int32_t *)opt.data + opt.count);
+    *value = int_values;
 }
 
 void VecOptions::consume_string(std::string name, std::string *value) {
@@ -30,6 +40,7 @@ void VecOptions::consume_bool(std::string name, bool *value) {
     fassert(v == 0 || v == 1);
     *value = (bool)v;
 }
+
 
 void VecOptions::ensure_empty() {
     if (m_options.size() > 0) {

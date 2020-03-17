@@ -77,6 +77,7 @@ class BaseProcgenEnv(CVecEnv):
         debug_mode=0,
         resource_root=None,
         num_threads=4,
+        level_seeds=None,
     ):
         if resource_root is None:
             resource_root = os.path.join(SCRIPT_DIR, "data", "assets") + os.sep
@@ -95,6 +96,8 @@ class BaseProcgenEnv(CVecEnv):
         if rand_seed is None:
             rand_seed = create_random_seed()
 
+        if level_seeds is None:
+            level_seeds = np.array([]).astype("int32")
         options.update(
             {
                 "env_name": env_name,
@@ -107,6 +110,7 @@ class BaseProcgenEnv(CVecEnv):
                 "num_threads": num_threads,
                 # these will only be used the first time an environment is created in a process
                 "resource_root": resource_root,
+                "level_seeds": level_seeds
             }
         )
 

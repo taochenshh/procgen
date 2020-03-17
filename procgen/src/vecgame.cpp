@@ -179,6 +179,7 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
     int rand_seed = 0;
     int num_threads = 4;
     std::string resource_root;
+    std::vector<int32_t> level_seeds;
 
     opts.consume_string("env_name", &env_name);
     opts.consume_int("num_levels", &num_levels);
@@ -187,6 +188,7 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
     opts.consume_int("rand_seed", &rand_seed);
     opts.consume_int("num_threads", &num_threads);
     opts.consume_string("resource_root", &resource_root);
+    opts.consume_int_array("level_seeds", &level_seeds);
 
     std::call_once(global_init_flag, global_init, rand_seed,
                    resource_root);
@@ -207,6 +209,10 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
     fassert(num_actions > 0);
     fassert(num_levels >= 0);
     fassert(start_level >= 0);
+    for (std::vector<int32_t>::iterator it = level_seeds.begin();
+         it!=level_seeds.end(); ++it){
+         fassert(*it >= 0);
+    }
 
     int level_seed_low = 0;
     int level_seed_high = 0;
@@ -228,13 +234,24 @@ VecGame::VecGame(int _nenvs, VecOptions opts) {
     RandGen game_level_seed_gen;
     game_level_seed_gen.seed(rand_seed);
 
+    if (level_seeds.size() > 0){
+         fassert(level_seeds.size() == num_envs);
+    }
+
     for (int n = 0; n < num_envs; n++) {
         auto name = env_names[n % num_joint_games];
 
         games[n] = globalGameRegistry->at(name)();
         games[n]->level_seed_rand_gen.seed(game_level_seed_gen.randint());
-        games[n]->level_seed_high = level_seed_high;
-        games[n]->level_seed_low = level_seed_low;
+        if (level_seeds.size() > 0){
+            games[n]->level_seed_high = level_seeds[n] + 1;
+            games[n]->level_seed_low = level_seeds[n];
+        }
+        else{
+            games[n]->level_seed_high = level_seed_high;
+            games[n]->level_seed_low = level_seed_low;
+        }
+
         games[n]->game_n = n;
         games[n]->is_waiting_for_step = false;
         games[n]->parse_options(name, opts);
